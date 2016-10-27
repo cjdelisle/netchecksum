@@ -6,5 +6,5 @@ UDP and ICMP in pure js.
 To use it:
 ```javascript
 const NetChecksum = require('netchecksum');
-console.log(NetChecksum(new Buffer("hello world")));
+console.log(NetChecksum.raw(new Buffer("hello world")));
 ```
