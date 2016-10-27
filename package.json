@@ -1,0 +1,29 @@
+{
+  "name": "netchecksum",
+  "version": "0.0.0",
+  "description": "Calculate 1s complement (internet) checksums using pure js",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "lint": "jshint --verbose --config .jshintrc --exclude-path .jshintignore ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjdelisle/netchecksum.git"
+  },
+  "keywords": [
+    "checksum",
+    "tcp",
+    "udp",
+    "network"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cjdelisle/netchecksum/issues"
+  },
+  "homepage": "https://github.com/cjdelisle/netchecksum#readme",
+  "devDependencies": {
+    "jshint": "~2.9.1"
+  }
+}
