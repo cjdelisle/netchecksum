@@ -1,6 +1,6 @@
 {
   "name": "netchecksum",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Calculate 1s complement (internet) checksums using pure js",
   "main": "index.js",
   "scripts": {

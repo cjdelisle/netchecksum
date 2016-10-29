@@ -27,5 +27,8 @@ const raw = module.exports.raw = (buf) => {
         state = (state >>> 16) + (state & 0xFFFF);
     }
 
+    // Unconditional flip because node only runs on little endian machines
+    state = ((state << 8) & 0xffff) | (state >>> 8);
+
     return state ^ 0xffff;
 };
