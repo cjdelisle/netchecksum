@@ -32,3 +32,42 @@ const raw = module.exports.raw = (buf) => {
 
     return state ^ 0xffff;
 };
+
+const udp4 = module.exports.udp4 = (srcIp, dstIp, srcPort, dstPort, content) => {
+    if (!Buffer.isBuffer(srcIp) || srcIp.length !== 4) {
+        throw new Error("srcIp must be a 4 byte buffer");
+    }
+    if (!Buffer.isBuffer(dstIp) || dstIp.length !== 4) {
+        throw new Error("dstIp must be a 4 byte buffer");
+    }
+    if (typeof(srcPort) === 'number') {
+        if (srcPort < 0 || srcPort > 65535) { throw new Error("srcPort out of range"); }
+        const _srcPort = new Buffer(2);
+        _srcPort.writeUInt16BE(srcPort);
+        srcPort = _srcPort;
+    }
+    if (typeof(dstPort) === 'number') {
+        if (dstPort < 0 || dstPort > 65535) { throw new Error("dstPort out of range"); }
+        const _dstPort = new Buffer(2);
+        _dstPort.writeUInt16BE(dstPort);
+        dstPort = _dstPort;
+    }
+    if (!Buffer.isBuffer(srcPort) || srcPort.length !== 2) {
+        throw new Error("srcPort must be a 2 byte buffer or a number between 0 and 65535");
+    }
+    if (!Buffer.isBuffer(dstPort) || dstPort.length !== 2) {
+        throw new Error("dstPort must be a 2 byte buffer or a number between 0 and 65535");
+    }
+    // length includes the length of the udp header...
+    if ((8 + content.length) > 65535) {
+        throw new Error("it is impossible to make a UDP packet of length > 65535");
+    }
+    const length = new Buffer(2);
+    length.writeUInt16BE(8 + content.length);
+    const pseudo = Buffer.concat([
+        srcIp, dstIp, new Buffer([0, 17]), length,
+        srcPort, dstPort, length, new Buffer([0, 0]),
+        content
+    ]);
+    return raw(pseudo);
+}
