@@ -1,3 +1,4 @@
+/*@flow*/
 const NetChecksum = require('./index');
 
 const buf = (x) => (new Buffer(x, 'hex'));

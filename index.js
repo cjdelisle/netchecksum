@@ -1,6 +1,7 @@
+/*@flow*/
 'use strict';
 
-const raw = module.exports.raw = (buf) => {
+const raw = module.exports.raw = (buf /*:Buffer*/) => {
     // Checksum pairs.
     let state = 0;
     let hbit = 0;
@@ -33,7 +34,13 @@ const raw = module.exports.raw = (buf) => {
     return state ^ 0xffff;
 };
 
-const udp4 = module.exports.udp4 = (srcIp, dstIp, srcPort, dstPort, content) => {
+const udp4 = module.exports.udp4 = (
+    srcIp /*:Buffer*/,
+    dstIp /*:Buffer*/,
+    srcPort /*:Buffer|number*/,
+    dstPort /*:Buffer|number*/,
+    content /*:Buffer*/) =>
+{
     if (!Buffer.isBuffer(srcIp) || srcIp.length !== 4) {
         throw new Error("srcIp must be a 4 byte buffer");
     }
@@ -43,13 +50,13 @@ const udp4 = module.exports.udp4 = (srcIp, dstIp, srcPort, dstPort, content) => 
     if (typeof(srcPort) === 'number') {
         if (srcPort < 0 || srcPort > 65535) { throw new Error("srcPort out of range"); }
         const _srcPort = new Buffer(2);
-        _srcPort.writeUInt16BE(srcPort);
+        _srcPort.writeUInt16BE(srcPort, 0);
         srcPort = _srcPort;
     }
     if (typeof(dstPort) === 'number') {
         if (dstPort < 0 || dstPort > 65535) { throw new Error("dstPort out of range"); }
         const _dstPort = new Buffer(2);
-        _dstPort.writeUInt16BE(dstPort);
+        _dstPort.writeUInt16BE(dstPort, 0);
         dstPort = _dstPort;
     }
     if (!Buffer.isBuffer(srcPort) || srcPort.length !== 2) {
@@ -63,11 +70,11 @@ const udp4 = module.exports.udp4 = (srcIp, dstIp, srcPort, dstPort, content) => 
         throw new Error("it is impossible to make a UDP packet of length > 65535");
     }
     const length = new Buffer(2);
-    length.writeUInt16BE(8 + content.length);
+    length.writeUInt16BE(8 + content.length, 0);
     const pseudo = Buffer.concat([
         srcIp, dstIp, new Buffer([0, 17]), length,
         srcPort, dstPort, length, new Buffer([0, 0]),
         content
     ]);
     return raw(pseudo);
-}
+};
